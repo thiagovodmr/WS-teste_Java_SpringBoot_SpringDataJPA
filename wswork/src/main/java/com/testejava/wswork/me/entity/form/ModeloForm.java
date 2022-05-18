@@ -1,5 +1,6 @@
 package com.testejava.wswork.me.entity.form;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -15,7 +16,7 @@ public class ModeloForm {
     @Positive(message = "o Id da Marca precisa ser um valor positivo")
     private Long marcaId;
 
-    @NotNull(message = "você presica informar o nome da marca")
+    @NotEmpty(message = "você presica informar o nome da marca")
     private String nome;
 
     @NotNull(message = "você precisa informar o valor FIPE")
