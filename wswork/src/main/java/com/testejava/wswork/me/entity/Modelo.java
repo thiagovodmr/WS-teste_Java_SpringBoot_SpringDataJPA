@@ -38,6 +38,7 @@ public class Modelo {
     @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = false)
     private Long valorFipe;
 
     @OneToMany(mappedBy = "modelo", fetch = FetchType.LAZY, orphanRemoval = true)
