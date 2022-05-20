@@ -2,7 +2,9 @@ package com.testejava.wswork.me.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+import com.testejava.wswork.me.configurations.Exceptions.IdNotFoundException;
 import com.testejava.wswork.me.entity.Carro;
 import com.testejava.wswork.me.entity.Marca;
 import com.testejava.wswork.me.entity.Modelo;
@@ -14,6 +16,7 @@ import com.testejava.wswork.me.repository.ModeloRepository;
 import com.testejava.wswork.me.service.ICarroService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,31 +28,50 @@ public class CarroServiceImpl implements ICarroService {
 
     @Override
     public Carro create(CarroForm form) {
-        Carro carro = new Carro();
-        Modelo modelo = modeloRepository.findById(form.getModeloId()).get();
+        try {
+            Carro carro = new Carro();
+            Modelo modelo = modeloRepository.findById(form.getModeloId()).get();
 
-        carro.setAno(form.getAno());
-        carro.setCombustivel(form.getCombustivel());
-        carro.setCor(form.getCor());
-        carro.setNumPortas(form.getNumPortas());
-        carro.setModelo(modelo);
+            carro.setAno(form.getAno());
+            carro.setCombustivel(form.getCombustivel());
+            carro.setCor(form.getCor());
+            carro.setNumPortas(form.getNumPortas());
+            carro.setModelo(modelo);
 
-        return repository.save(carro);
-
+            return repository.save(carro);
+        } catch (NoSuchElementException e) {
+            throw new IdNotFoundException("Modelo não encontrado no sistema");
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
     public Carro update(Long id, CarroUpdateForm form) {
-        Carro carro = repository.findById(id).get();
-        carro.setCombustivel(form.getCombustivel());
-        carro.setCor(form.getCor());
+        try {
+            Carro carro = repository.findById(id).get();
+            carro.setCombustivel(form.getCombustivel());
+            carro.setCor(form.getCor());
 
-        return repository.save(carro);
+            return repository.save(carro);
+        } catch (NoSuchElementException e) {
+            throw new IdNotFoundException("Carro não encontrado no sistema");
+        } catch (Exception e) {
+            throw e;
+        }
+
     }
 
     @Override
     public void delete(Long id) {
-        repository.deleteById(id);
+        try {
+            repository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new IdNotFoundException("não foi possível deletar, verifique o ID ");
+        } catch (Exception e) {
+            throw e;
+        }
+
     }
 
     @Override
@@ -59,7 +81,13 @@ public class CarroServiceImpl implements ICarroService {
 
     @Override
     public Carro getById(Long id) {
-        return repository.findById(id).get();
+        try {
+            return repository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            throw new IdNotFoundException("Carro não encontrado no sistema");
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     public List<CarroViewListagem> getAllCarrosWithModeloMarca() {

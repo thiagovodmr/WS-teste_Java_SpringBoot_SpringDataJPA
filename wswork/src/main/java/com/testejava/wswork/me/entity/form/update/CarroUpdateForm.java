@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class CarroUpdateForm {
     @NotEmpty(message = "o campo combustivel precisa ser preenchido")
     private String combustivel;
-    @NotEmpty(message = "o campo cor precisa ser preenchido")
+
+    @NotEmpty(message = "você precisa informar a cor do carro")
     private String cor;
 }
